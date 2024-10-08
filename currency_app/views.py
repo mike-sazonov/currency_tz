@@ -1,16 +1,12 @@
-from requests import Response
-
 from .api import get_currency
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from .serializers import CurrencyModelSerializer
 from .models import CurrencyModel
 
-class CurrencyList(APIView):
+class CurrencyList(ListAPIView):
     serializer_class = CurrencyModelSerializer
-    cur_value = get_currency()
+    queryset = CurrencyModel.objects.order_by('-create')[:10]
 
     def get(self, request, *args, **kwargs):
-        api_request = CurrencyModel.objects.create(value=self.cur_value)
-        serializer = CurrencyModelSerializer(api_request)
-        return Response(serializer.data)
+        CurrencyModel.objects.create(value=get_currency())
+        return super().get(self)
