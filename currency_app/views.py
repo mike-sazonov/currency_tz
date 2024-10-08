@@ -1,9 +1,6 @@
 from django.http import HttpResponse
 
-from django.shortcuts import render
-from django.views.debug import ExceptionReporter
-
-from .api import get_currency
+from .external_api import get_currency
 from rest_framework.generics import ListAPIView
 from .serializers import CurrencyModelSerializer
 from .models import CurrencyModel
@@ -11,11 +8,11 @@ from .models import CurrencyModel
 
 class CurrencyList(ListAPIView):
     serializer_class = CurrencyModelSerializer
-    queryset = CurrencyModel.objects.order_by('-create')[:10]
+    queryset = CurrencyModel.objects.order_by('-create')[:11]   # список записей из бд, отсортированный по времени создания
 
     def get(self, request, *args, **kwargs):
         try:
-            CurrencyModel.objects.create(value=get_currency())
+            CurrencyModel.objects.create(value=get_currency())  # создание новой записи в бд с данными из api
         except Exception:
             return HttpResponse(
                 'Exception: the time between requests should be 10 seconds'
