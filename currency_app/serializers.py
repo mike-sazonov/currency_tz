@@ -7,4 +7,4 @@ class CurrencyModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CurrencyModel
-        fields = '__all__'
+        fields = ["valute", "value", "create"]
